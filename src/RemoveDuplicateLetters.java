@@ -28,31 +28,59 @@ import java.util.*;
  */
 public class RemoveDuplicateLetters {
     public static void main(String[] args) {
-        System.out.println(removeDuplicateLetters("ccacbaba"));
+        System.out.println(removeDuplicateLetters("ecbacba"));
     }
 
     public static String removeDuplicateLetters(String s) {
-        Map<Character, Integer> map = new HashMap<>();
-        for (int i = 0; i < s.length(); i++) {
-            map.put(s.charAt(i), i);
+        int length = s.length();
+        int[] last = new int[26];
+        boolean[] used = new boolean[26];
+        for (int i = 0; i < length; i++) {
+            last[s.charAt(i) - 'a'] = i;
         }
-        HashSet<Character> used = new HashSet<>(map.size());
-        Deque<Character> deque = new LinkedList<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (used.contains(s.charAt(i))) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            char c = s.charAt(i);
+            // 栈中已有直接抛弃
+            if (used[c - 'a']) {
                 continue;
             }
-            used.add(s.charAt(i));
-            while (!deque.isEmpty() && s.charAt(i) <= deque.peekLast() && map.get(deque.peekLast()) > i) {
-                used.remove(deque.pollLast());
+            // 比栈顶小且栈顶后方还有重复则弹出栈顶
+            while (sb.length() > 0 && c < sb.charAt(sb.length() - 1) && last[sb.charAt(sb.length() - 1) - 'a'] > i) {
+                used[sb.charAt(sb.length() - 1) - 'a'] = false;
+                sb.deleteCharAt(sb.length() - 1);
             }
-            deque.offerLast(s.charAt(i));
+            sb.append(c);
+            used[c - 'a'] = true;
         }
+        return sb.toString();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        while (!deque.isEmpty()) {
-            stringBuilder.append(deque.pollFirst());
-        }
-        return stringBuilder.toString();
+
+//
+//        int length = s.length();
+//        Map<Character,Integer> map = new HashMap<>();
+//        Set<Character> set =new HashSet<>();
+//        for (int i = 0; i < length; i++) {
+//            map.put(s.charAt(i),i);
+//        }
+//        Deque<Character> stack = new LinkedList<>();
+//        for (int i = 0; i < length; i++) {
+//            char c = s.charAt(i);
+//            // 栈中已有直接抛弃
+//            if(set.contains(c)){
+//                continue;
+//            }
+//            // 比栈顶小且栈顶后方还有重复则弹出栈顶
+//            while (!stack.isEmpty() && c < stack.peekLast() && map.get(stack.peekLast()) > i) {
+//                set.remove(stack.pollLast());
+//            }
+//            stack.offerLast(c);
+//            set.add(c);
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        while (!stack.isEmpty()){
+//            sb.append(stack.pollFirst());
+//        }
+//        return sb.toString();
     }
 }
