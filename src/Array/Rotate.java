@@ -32,40 +32,59 @@ package Array;
  */
 public class Rotate {
     public static void main(String[] args) {
-        int[] nums = new int[]{-1,-100,3,99};
-        rotate(nums,2);
+        int[] nums = new int[]{1,2,3,4,5,6,7};
+        rotate(nums,3);
         for (int i = 0; i < nums.length; i++) {
             System.out.print(nums[i]+" ");
         }
 
     }
-    /**
-     * 环状替代
-     * 从第0个同学开始 找到他该坐的位置 并将座位上的同学挤出到角落 角落的同学继续找到自己该坐的位置 如此反复 直到所有的同学都换过一次座位
-     * 当 n 和 k 的最大公约数 等于 1 的时候：1 次遍历就可以完成交换；比如 n = 5, k = 3n=5,k=3
-     * 当 n 和 k 的最大公约数 不等于 1 的时候：1 次遍历是无法完成的所有元素归位，需要 m (最大公约数) 次
-     * @param nums
-     * @param k
-     */
     public static void rotate(int[] nums, int k) {
-        int l = nums.length;
-        int a = k % l;
-        // 记录交换位置的次数，n个同学一共需要换n次
         int count = 0;
-        for (int i = 0; count < l; i++) {
-            // 从0位置开始换位子
-            int curr = i;
-            int pre = nums[curr];
-            int temp ;
-            do {
-                curr = (curr + a) % l;
-                // 被挤出的同学来到角落 等待下一轮入座
-                temp = nums[curr];
-                nums[curr] = pre;
-                pre = temp;
+        for (int i = 0; count < nums.length; i++) {
+            int out = nums[i];
+            int j = i;
+            while (true){
+                j = (j+k) % nums.length;
+                int temp = nums[j];
+                nums[j] = out;
+                out = temp;
                 count++;
-                // 角落的人回到空位，循环暂停
-            } while (curr != i);
+                if(j == i){
+                    break;
+                }
+            }
         }
     }
+
+
+//    /**
+//     * 环状替代
+//     * 从第0个同学开始 找到他该坐的位置 并将座位上的同学挤出到角落 角落的同学继续找到自己该坐的位置 如此反复 直到所有的同学都换过一次座位
+//     * 当 n 和 k 的最大公约数 等于 1 的时候：1 次遍历就可以完成交换；比如 n = 5, k = 3n=5,k=3
+//     * 当 n 和 k 的最大公约数 不等于 1 的时候：1 次遍历是无法完成的所有元素归位，需要 m (最大公约数) 次
+//     * @param nums
+//     * @param k
+//     */
+//    public static void rotate(int[] nums, int k) {
+//        int l = nums.length;
+//        int a = k % l;
+//        // 记录交换位置的次数，n个同学一共需要换n次
+//        int count = 0;
+//        for (int i = 0; count < l; i++) {
+//            // 从0位置开始换位子
+//            int curr = i;
+//            int pre = nums[curr];
+//            int temp ;
+//            do {
+//                curr = (curr + a) % l;
+//                // 被挤出的同学来到角落 等待下一轮入座
+//                temp = nums[curr];
+//                nums[curr] = pre;
+//                pre = temp;
+//                count++;
+//                // 角落的人回到空位，循环暂停
+//            } while (curr != i);
+//        }
+//    }
 }
